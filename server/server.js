@@ -5,10 +5,6 @@ const authRoutes = require("./routes/authRoutes");
 const resumeRoutes = require("./routes/resumeRoutes");
 dotenv.config();
 
-console.log(
-    "SERVER GEMINI KEY:",
-    process.env.GEMINI_API_KEY
-);
 
 const connectDB = require("./config/db");
 
