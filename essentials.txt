@@ -1,0 +1,10 @@
+Software Engineer Intern
+
+Required Skills:
+React
+Node.js
+MongoDB
+Express
+Git
+Docker
+AWS

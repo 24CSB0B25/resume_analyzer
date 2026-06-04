@@ -1,0 +1,18 @@
+module.exports = [
+    "react",
+    "node.js",
+    "mongodb",
+    "express",
+    "git",
+    "docker",
+    "aws",
+    "javascript",
+    "typescript",
+    "python",
+    "java",
+    "c++",
+    "sql",
+    "html",
+    "css",
+    "rest api",
+];
