@@ -12,13 +12,6 @@ connectDB();
 
 const mongoose = require("mongoose");
 
-setTimeout(() => {
-    console.log(
-        "Current DB:",
-        mongoose.connection.db.databaseName
-    );
-}, 2000);
-
 const app = express();
 
 app.use(cors());
