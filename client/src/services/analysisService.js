@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const API =
-    "http://localhost:5001/api/resume";
+    import.meta.env.VITE_API_URL +
+    "/api/resume";
 
 export const getAnalysis =
     async (id) => {

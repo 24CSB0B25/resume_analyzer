@@ -30,7 +30,7 @@ export const getDashboardStats =
             : 0;
 
     const latestATS =
-      total
+        total
         ? analyses[0].atsScore
         : 0;
 
