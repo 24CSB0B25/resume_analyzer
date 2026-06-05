@@ -156,18 +156,23 @@ const analyzeResume = async (req, res) => {
         }
 
         console.log("REQ USER =", req.user);
-        const savedAnalysis = await Analysis.create({
+        const savedAnalysis =
+            await Analysis.create({
 
-            atsScore: atsResult.score,
+                user: req.user.id,
 
-            matchedSkills: atsResult.matchedSkills,
+                atsScore: atsResult.score,
 
-            missingSkills: atsResult.missingSkills,
+                matchedSkills:
+                    atsResult.matchedSkills,
 
-            candidateInfo,
+                missingSkills:
+                    atsResult.missingSkills,
 
-            aiAnalysis,
-        });
+                candidateInfo,
+
+                aiAnalysis,
+            });
 
         console.log("SAVED ANALYSIS:", savedAnalysis);
 
@@ -191,7 +196,7 @@ const analyzeResume = async (req, res) => {
 const getAnalysisHistory =
     async (req, res) => {
         try {
-        const analyses = await Analysis.find()
+        const analyses = await Analysis.find({ user: req.user.id })
         .sort({ createdAt: -1 });
 
         res.json(analyses);
@@ -209,9 +214,13 @@ const getAnalysisById =
     try {
 
         const analysis =
-            await Analysis.findById(
-                req.params.id
-            );
+            await Analysis.findOne({
+
+                _id: req.params.id,
+
+                user: req.user.id,
+
+            });
 
         if (!analysis) {
             return res.status(404).json({

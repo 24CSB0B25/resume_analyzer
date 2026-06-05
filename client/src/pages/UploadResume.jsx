@@ -16,11 +16,11 @@ function UploadResume() {
         setJobDescription,
     ] = useState("");
 
-    const [result, setResult] =
-        useState(null);
+    const [result, setResult] =useState(null);
 
-    const [loading, setLoading] =
-        useState(false);
+    const [loading, setLoading] =useState(false);
+
+    const [analysisSteps, setAnalysisSteps] =useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,37 +40,77 @@ function UploadResume() {
         }
 
         try {
-        setLoading(true);
 
-        const formData =
-            new FormData();
+            setLoading(true);
 
-        formData.append(
-            "resume",
-            resume
-        );
+            setAnalysisSteps([
+                "✓ Extracting Resume Information..."
+            ]);
 
-        formData.append(
-            "jobDescription",
-            jobDescription
-        );
+            setTimeout(() => {
+                setAnalysisSteps(prev => [
+                    ...prev,
+                    "✓ Matching Skills with Job Description..."
+                ]);
+            }, 1000);
 
-        const data =
-            await analyzeResume(
-            formData
+            setTimeout(() => {
+                setAnalysisSteps(prev => [
+                    ...prev,
+                    "✓ Calculating ATS Score..."
+                ]);
+            }, 2000);
+
+            setTimeout(() => {
+                setAnalysisSteps(prev => [
+                    ...prev,
+                    "✓ Generating AI Insights..."
+                ]);
+            }, 3000);
+
+            setTimeout(() => {
+                setAnalysisSteps(prev => [
+                    ...prev,
+                    "✓ Preparing Analysis Report..."
+                ]);
+            }, 4000);
+
+            const formData =
+                new FormData();
+
+            formData.append(
+                "resume",
+                resume
             );
 
-        setResult(data);
+            formData.append(
+                "jobDescription",
+                jobDescription
+            );
+
+            const data =
+                await analyzeResume(
+                formData
+                );
+
+            setResult(data);
 
         } catch (error) {
-        console.error(error);
 
-        alert(
-            "Analysis failed"
-        );
-        } finally {
-        setLoading(false);
-        }
+            console.error(error);
+
+            alert(
+                error?.response?.data?.message ||
+                error?.message ||
+                "Analysis failed"
+            );
+        } 
+        setResult(data);
+
+        setTimeout(() => {
+            setLoading(false);
+            setAnalysisSteps([]);
+        }, 500);
     };
 
     return (
@@ -91,70 +131,119 @@ function UploadResume() {
             </div>
 
             <div className="card hero-card">
-            <form
-                onSubmit={
-                handleSubmit
-                }
-            >
-                <label className="upload-zone">
 
-                    <input
-                        type="file"
-                        accept=".pdf"
-                        hidden
-                        onChange={(e) =>
-                        setResume(
-                            e.target.files[0]
-                        )
-                        }
-                    />
+                {loading ? (
 
-                    <div>
-                        <h2>📄 Upload Resume</h2>
+                    <div
+                        style={{
+                            textAlign: "center",
+                            padding: "50px",
+                        }}
+                    >
+                        <h2>
+                            Resume Analyzer AI
+                        </h2>
 
-                        <p>
-                        Drag & Drop your PDF
-                        or click to browse
-                        </p>
+                        <h3
+                            style={{
+                                marginTop: "25px",
+                            }}
+                        >
+                            Analyzing Resume...
+                        </h3>
 
-                        {resume && (
-                        <div className="file-selected">
-                            ✓ {resume.name}
+                        <div
+                            style={{
+                                marginTop: "30px",
+                                fontSize: "18px",
+                                color: "#00ff88",
+                                fontWeight: "600",
+                            }}
+                        >
+                            {analysisSteps.map((step, index) => (
+                                <div
+                                    key={index}
+                                    style={{
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {step}
+                                </div>
+                            ))}
                         </div>
-                        )}
+
+                        <div
+                            style={{
+                                marginTop: "25px",
+                                opacity: 0.7,
+                            }}
+                        >
+                            Please wait while our AI
+                            analyzes your resume.
+                        </div>
+
                     </div>
 
-                </label>
+                ) : (
 
-                <h3>Job Description</h3>
-                <textarea
-                className="
-                text-area
-                "
-                placeholder="
-    Paste Job Description Here
-    "
-                value={
-                    jobDescription
-                }
-                onChange={(e) =>
-                    setJobDescription(
-                    e.target.value
-                    )
-                }
-                />
+                    <form
+                        onSubmit={handleSubmit}
+                    >
 
-                <button
-                type="submit"
-                className="
-                ai-button
-                "
-                >
-                {loading
-                    ? "Analyzing..."
-                    : "Analyze Resume"}
-                </button>
-            </form>
+                        <label className="upload-zone">
+
+                            <input
+                                type="file"
+                                accept=".pdf"
+                                hidden
+                                onChange={(e) =>
+                                    setResume(
+                                        e.target.files[0]
+                                    )
+                                }
+                            />
+
+                            <div>
+                                <h2>📄 Upload Resume</h2>
+
+                                <p>
+                                    Drag & Drop your PDF
+                                    or click to browse
+                                </p>
+
+                                {resume && (
+                                    <div className="file-selected">
+                                        ✓ {resume.name}
+                                    </div>
+                                )}
+                            </div>
+
+                        </label>
+
+                        <h3>Job Description</h3>
+
+                        <textarea
+                            className="text-area"
+                            placeholder="Paste Job Description Here"
+                            value={jobDescription}
+                            onChange={(e) =>
+                                setJobDescription(
+                                    e.target.value
+                                )
+                            }
+                        />
+
+                        <button
+                            type="submit"
+                            className="ai-button"
+                        >
+                            Analyze Resume
+                        </button>
+
+                    </form>
+
+                )}
+
             </div>
 
             {result && (

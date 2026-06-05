@@ -6,10 +6,21 @@ const API =
 export const getAnalysis =
     async (id) => {
 
-    const response =
-        await axios.get(
-            `${API}/history/${id}`
-        );
+        const token =
+            localStorage.getItem(
+                "token"
+            );
 
-    return response.data;
-};
+        const response =
+            await axios.get(
+                `${API}/history/${id}`,
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`,
+                    },
+                }
+            );
+
+        return response.data;
+    };

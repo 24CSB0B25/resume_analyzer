@@ -1,14 +1,10 @@
-import {
-    useEffect,
-    useState,
-} from "react";
+import {useEffect,useState,} from "react";
 
-import {
-    getDashboardStats,
-} from "../services/dashboardService";
+import {getDashboardStats,} from "../services/dashboardService";
 
-import ATSTrendChart
-from "../components/ATSTrendChart";
+import ATSTrendChart from "../components/ATSTrendChart";
+
+import { useAuth } from "../context/AuthContext";
 
 function Dashboard() {
 
@@ -16,6 +12,8 @@ function Dashboard() {
         stats,
         setStats,
     ] = useState(null);
+
+    const { user } = useAuth();
 
     useEffect(() => {
 
@@ -33,7 +31,26 @@ function Dashboard() {
     }, []);
 
     if (!stats) {
-        return <div>Loading...</div>;
+        return (
+            <div
+                style={{
+                    height: "70vh",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "15px",
+                }}
+            >
+                <h1>
+                    Resume Analyzer AI
+                </h1>
+
+                <p>
+                    Loading Dashboard...
+                </p>
+            </div>
+        );
     }
 
     return (
@@ -46,7 +63,7 @@ function Dashboard() {
         <div className="card dashboard-hero">
 
             <h2>
-                Welcome Back 👋
+                Welcome Back, {user?.name} 👋
             </h2>
 
             <p>
@@ -57,6 +74,62 @@ function Dashboard() {
 
         </div>
 
+        <div
+            style={{
+                marginTop: "20px",
+                display: "flex",
+                gap: "25px",
+                flexWrap: "wrap",
+            }}
+        >
+            <div>
+                <strong>
+                    {stats.total}
+                </strong>
+                <p>Analyses</p>
+            </div>
+
+            <div>
+                <strong>
+                    {stats.highestATS}%
+                </strong>
+                <p>Best ATS</p>
+            </div>
+
+            <div>
+                <strong>
+                    {stats.averageATS}%
+                </strong>
+                <p>Average ATS</p>
+            </div>
+        </div>
+
+        {
+            stats.total === 0 && (
+                <div
+                    className="stat-card"
+                    style={{
+                        textAlign: "center",
+                        marginBottom: "25px",
+                    }}
+                >
+                    <h3>
+                        No Resume Analyses Yet
+                    </h3>
+
+                    <p>
+                        Upload your first resume
+                        to start receiving ATS
+                        scores and AI insights.
+                    </p>
+                </div>
+            )
+        }
+
+        <ATSTrendChart
+            analyses={stats.analyses}
+        />
+        
         <div className="stats-row">
 
             <div className="stat-card">

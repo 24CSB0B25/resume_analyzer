@@ -7,36 +7,21 @@ const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        console.log("Database:", mongoose.connection.db.databaseName);
-        console.log("Checking email:", email);
-
         const userExists = await User.findOne({ email });
 
-        console.log("Found:", userExists);
-        console.log("Type:", typeof userExists);
-        console.log("Boolean:", Boolean(userExists));
-
-        console.log("Before if");
-        
         if (userExists) {
         return res.status(400).json({
             message: "User already exists",
         });
         }
 
-        console.log("Passed duplicate check");
-
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        console.log("Password hashed");
 
         const user = await User.create({
         name,
         email,
         password: hashedPassword,
         });
-
-        console.log("User created:", user);
 
         res.status(201).json({
         _id: user._id,

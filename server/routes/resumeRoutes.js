@@ -12,17 +12,20 @@ const {
 
 router.post(
     "/analyze",
+    authMiddleware,
     upload.single("resume"),
     analyzeResume
 );
 
 router.get(
     "/history",
+    authMiddleware,
     getAnalysisHistory
 );
 
 router.get(
     "/history/:id",
+    authMiddleware,
     getAnalysisById
 );
 
